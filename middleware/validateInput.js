@@ -63,7 +63,8 @@ const validateProfile = [
 const validateProposta = [
   body('price').notEmpty().isNumeric(),
   body('message').notEmpty().trim().escape(),
-  body('status').notEmpty().trim().escape(),
+  body('order_id').notEmpty().trim().escape(),
+  body('user_id').notEmpty().trim().escape(),
 
 
   (req, res, next) => {

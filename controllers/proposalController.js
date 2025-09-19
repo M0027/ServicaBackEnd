@@ -1,7 +1,7 @@
 const Proposal = require('../models/ProposalModel');
 
 async function enviarProposta(req, res) {
-  const { order_id, price, message } = req.body;
+  const { order_id, price, message, user_id } = req.body;
   const professional_id = req.user.id;
 
   if (!order_id || !price || !message) {
@@ -9,7 +9,7 @@ async function enviarProposta(req, res) {
   }
 
   try {
-    const proposalId = await Proposal.createProposal({ professional_id,order_id, message, price });
+    const proposalId = await Proposal.createProposal({ professional_id,order_id, message, price, user_id });
     res.status(201).json({ message: 'Proposta enviada com sucesso.', proposalId });
     console.log('buscou', proposalId)
   } catch (error) {
@@ -23,6 +23,20 @@ async function listarPropostasPorPedido(req, res) {
 
   try {
     const propostas = await Proposal.getProposalsByUser(id);
+    res.status(200).json(propostas);
+  } catch (error) {
+    console.error('Erro ao buscar propostas:', error);
+    res.status(500).json({ error: 'Erro interno.' });
+  }
+}
+
+async function listarPropostasPorProfissional(req, res) {
+  const { profId } = req.params;
+
+  console.log(profId);
+
+  try {
+    const propostas = await Proposal.getProposalsByProf(profId);
     res.status(200).json(propostas);
   } catch (error) {
     console.error('Erro ao buscar propostas:', error);
@@ -67,5 +81,6 @@ module.exports = {
   enviarProposta,
   listarPropostasPorPedido,
   deletarProposta,
-  responderProposta
+  responderProposta,
+  listarPropostasPorProfissional
 };

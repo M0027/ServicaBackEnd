@@ -5,10 +5,17 @@ async function createProfile(data) {
     `INSERT INTO professional_profiles 
      (user_id, service_id, description, address, image_url, status)
      VALUES (?, ?, ?, ?, ?,'pendente')`,
-    [data.user_id, data.service_id, data.description, data.address, data.image_url, data.status]
+    [data.user_id, data.Service_id, data.description, data.address, data.image_url, data.status]
   );
 
-  filUser_serviceTable(data.user_id, data.service_id)
+  // actualizar o role do user para profissional
+  const role = "profissional";
+  const [result2] = await db.query(
+    `UPDATE users SET role = ? WHERE id = ?`,[role, data.user_id]);
+
+  
+
+  filUser_serviceTable(data.user_id, data.Service_id)
   return result.insertId;
 }
 
@@ -40,6 +47,14 @@ async function getProfileByUserId(user_id) {
     [user_id]
   );
 
+  console.log("aqui linha",rows[0]?.service_id)
+
+  if (rows.length === 0) {
+    return null; // Retorna null se nenhum perfil for encontrado
+  }
+
+ const service = parseInt(rows[0]?.service_id)
+
   const [rowBrute] = await db.query(
     `SELECT * FROM users WHERE id = ?`,
     [user_id]
@@ -47,8 +62,10 @@ async function getProfileByUserId(user_id) {
 
   const [serviceRows] = await db.query(
     `SELECT name AS service_name FROM services WHERE id = ?`,
-    [rows[0].service_id]
+    [service]
   );
+
+  console.log("aqui",serviceRows)
 
   const rows2 = rowBrute.map(({ password, ...rest }) => rest);
   
@@ -70,7 +87,7 @@ async function updateProfile(user_id, data) {
     [data.service_type, data.description, data.address, data.image_url, user_id]
   );
 
-  updare_user_serviceTable(user_id, data.service_id)
+  updare_user_serviceTable(user_id, data.Service_id)
 }
 
 module.exports = {

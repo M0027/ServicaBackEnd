@@ -57,22 +57,34 @@ async function login(req, res) {
     const [users] = await db.query('SELECT * FROM users WHERE phone = ?', [phone]);
     const user = users[0];
     if (!user) return res.status(401).json({ error: 'Credenciais inválidas.' });
-
+    
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: 'Credenciais inválidas.' });
 
+    console.log(user.id)
+    
+    const [professionalProfiles] = await db.query('SELECT * FROM professional_profiles WHERE user_id = ?', [user?.id]);
+    // console.log("Conteúdo de professionalProfiles:", professionalProfiles);
+    let professionalProfile = null;
+    let serviceId = null;
+
+    if (professionalProfiles.length > 0) {
+      professionalProfile = professionalProfiles[0];
+      serviceId = professionalProfile.service_id;
+    }
+    console.log("aquuiii", serviceId);
     // if (user.role === 'professional' && user.is_approved !== 1) {
     //   return res.status(403).json({ error: 'Sua conta ainda não foi aprovada.' });
     // }
 
-    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '2h' });
+    const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '1h' });
 
     res.json({
       token,
       user: {
         id: user.id,
         name: user.name,
-        phone: user.email,
+        service_id: serviceId,
         role: user.role
       }
     });

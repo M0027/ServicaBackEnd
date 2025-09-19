@@ -4,8 +4,8 @@ const { createOrUpdateProfile, getOwnProfile } = require('../controllers/profess
 const authenticateToken = require('../middleware/auth');
 const {validateProfile} = require('../middleware/validateInput')
 
-router.post('/profile',validateProfile, createOrUpdateProfile);
-router.get('/profile/:id', getOwnProfile);
+router.post('/profile',authenticateToken, validateProfile, createOrUpdateProfile);
+router.get('/profile/:id',authenticateToken, getOwnProfile);
 
 
 module.exports = router;

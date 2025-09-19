@@ -42,6 +42,25 @@ async function listarPedidos(req, res) {
   }
 }
 
+// listar pedido por usuario
+async function listarPedidosUser(req, res) {
+  const {id} = req.params
+
+  console.log(id)
+  try {
+    const [pedidos] = await db.execute('SELECT * FROM orders WHERE client_id = ? ORDER BY created_at DESC', [id]);
+    if (pedidos.length > 0) {
+
+      res.status(200).json(pedidos);
+    } else {
+      res.status(200).json([])
+    }
+  } catch (error) {
+    console.error('Erro ao listar pedidos:', error);
+    res.status(500).json({ error: 'Erro ao buscar pedidos.' });
+  }
+}
+
 // Deletar um pedido por ID
 async function deletarPedido(req, res) {
   const { id } = req.params;
@@ -63,5 +82,6 @@ async function deletarPedido(req, res) {
 module.exports = {
   createPedidoPublic,
   listarPedidos,
+  listarPedidosUser,
   deletarPedido
 }
