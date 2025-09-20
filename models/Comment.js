@@ -19,6 +19,18 @@ const Comment = {
       [professional_id]
     );
     return rows;
+  },
+
+  async ListAllComments() {
+    const [rows] = await db.execute(
+      `SELECT comments.*, users.name 
+       FROM comments 
+       JOIN users ON comments.user_id = users.id 
+       ORDER BY comments.created_at DESC
+       LIMIT 3`
+       
+    );
+    return rows;
   }
 };
 

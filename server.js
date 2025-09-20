@@ -9,6 +9,7 @@ const pedidoRoutes = require('./routes/orders')
 const proposalRoutes = require('./routes/proposalRoutes');
 const serviceRoutes = require('./routes/serviceRoutes')
 const commentRoutes = require('./routes/commentRoutes');
+const allCommentRoutes = require('./routes/allcomment');
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use('/api/pedidos', pedidoRoutes)
 app.use('/api/propostas', proposalRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/allcommets', allCommentRoutes);
 app.use('/api/subscricao', subscriptionRoutes);
 
 

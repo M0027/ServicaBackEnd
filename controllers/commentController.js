@@ -30,6 +30,18 @@ const commentController = {
       console.error('Erro ao listar comentários:', error);
       return res.status(500).json({ error: 'Erro interno do servidor.' });
     }
+  },
+
+  async listAllComments(req, res) {
+    try {
+
+      const comments = await Comment.ListAllComments();
+
+      return res.status(200).json(comments);
+    } catch (error) {
+      console.error('Erro ao listar comentários:', error);
+      return res.status(500).json({ error: 'Erro interno do servidor.' });
+    }
   }
 };
 
