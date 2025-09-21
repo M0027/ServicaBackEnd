@@ -63,13 +63,15 @@ async function deletarProposta(req, res) {
 
 async function responderProposta(req, res){
   const {id} = req.params
-  const {status} = req.body  
+  const {dados} = req.body  
+
+  console.log('@@@@@@@@@@@@@@@@@@@@@', dados.status, dados.profissional_id)
 
     try {
 
-    const result = await Proposal.updateProposal(id, status);
+    const result = await Proposal.updateProposal(id, dados.status, dados.profissional_id);
      
-    res.status(200).json({message: `${status}`})
+    res.status(200).json({message: `${dados.status}`})
       
     } catch (error) {
       console.error('erro ao responder a proposta', error)

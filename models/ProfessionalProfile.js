@@ -1,12 +1,16 @@
 const db = require('../config/db');
 
 async function createProfile(data) {
+
+  console.log(typeof data.Service_id)
   const [result] = await db.query(
     `INSERT INTO professional_profiles 
      (user_id, service_id, description, address, image_url, status)
      VALUES (?, ?, ?, ?, ?,'pendente')`,
     [data.user_id, data.Service_id, data.description, data.address, data.image_url, data.status]
   );
+
+  console.log('service id:', data.Service_id, data)
 
   // actualizar o role do user para profissional
   const role = "profissional";
@@ -42,12 +46,15 @@ async function filUser_serviceTable(id, service){
 }
 
 async function getProfileByUserId(user_id) {
+  console.log('user_id', user_id)
   const [rows] = await db.query(
     `SELECT * FROM professional_profiles WHERE user_id = ?`,
     [user_id]
   );
 
-  console.log("aqui linha",rows[0]?.service_id)
+  console.log("aqui linha dados:",rows)
+  console.log("aqui linha service id",rows[0]?.service_id)
+  console.log("user id profille",user_id)
 
   if (rows.length === 0) {
     return null; // Retorna null se nenhum perfil for encontrado

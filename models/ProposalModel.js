@@ -43,7 +43,17 @@ async function deleteProposal(id) {
   return result.affectedRows;
 }
 
-async function updateProposal(id, status) {
+async function updateProposal(id, status,  profissional_id) {
+
+  if( status === "aceite"){
+    const [result] = await db.execute(
+      `UPDATE professional_profiles 
+       SET clientes_atendidos = clientes_atendidos + 1 
+       WHERE user_id = ?`,
+      [profissional_id]
+    );
+    
+  }
 
   const [result] = await db.execute(`UPDATE propostas SET status = ? WHERE id = ?`,[status,id])
   
